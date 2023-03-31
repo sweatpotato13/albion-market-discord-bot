@@ -10,3 +10,5 @@ export const itemLists = items.filter((item: any) => item.LocalizedNames).map((i
     value: item.UniqueName,
   }
 });
+
+export const enchantColorCode = ["#959490","#6BFF91","#47CCD8","#9F76D5","#D7C561"];

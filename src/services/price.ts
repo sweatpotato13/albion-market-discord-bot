@@ -4,7 +4,6 @@ import { itemLists } from "../constants";
 export class PriceService {
     static async getPrice(server: string, itemName: string, enchant: number, city: string) {
         let itemFilter = itemLists.filter((it: any) => it.name === itemName);
-        console.log(itemFilter)
         if (itemFilter.length < 1) {
             throw new Error("Item does not exist");
         }

@@ -1,11 +1,11 @@
-import { ApplicationCommandOptionType, AutocompleteInteraction, CommandInteraction, EmbedBuilder } from "discord.js";
+import { ApplicationCommandOptionType, AutocompleteInteraction, CommandInteraction, EmbedBuilder, HexColorString } from "discord.js";
 import {
     Discord,
     Slash,
     SlashChoice,
     SlashOption,
 } from "discordx";
-import { itemLists, priceCities } from "../constants";
+import { enchantColorCode, priceCities } from "../constants";
 import { PriceService } from "../services";
 
 @Discord()
@@ -42,9 +42,9 @@ export class Price {
     async _price(server: string, itemName: string, enchant: number, city: string, command: CommandInteraction): Promise<any> {
         try {
             const data = await PriceService.getPrice(server, itemName, enchant, city);
-
             const embed = new EmbedBuilder();
             embed.setTitle("Price of " + itemName);
+            embed.setColor(enchantColorCode[enchant] as HexColorString);
             embed.setThumbnail(`https://render.albiononline.com/v1/item/${data.item_id}.png`);
             embed.addFields(
                 { name: "Name", value: itemName, inline: true },
