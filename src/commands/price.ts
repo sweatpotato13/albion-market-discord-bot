@@ -27,33 +27,36 @@ export class Price {
             description: "city", name: "city", required: true, type: ApplicationCommandOptionType.String
         })
         city: string,
+        @SlashChoice(0, 1, 2, 3, 4)
+        @SlashOption({
+            description: "enchant", name: "enchant", required: false, type: ApplicationCommandOptionType.Number
+        })
+        enchant: number,
         command: CommandInteraction
     ): Promise<void> {
         await command.deferReply({ ephemeral: false });
-        this._price(server, item, city, command);
+
+        this._price(server, item, enchant ? enchant : 0, city, command);
     }
 
-    async _price(server: string, itemName: string, city: string, command: CommandInteraction): Promise<any> {
+    async _price(server: string, itemName: string, enchant: number, city: string, command: CommandInteraction): Promise<any> {
         try {
-            const response = await PriceService.getPrice(server, itemName, city);
-            const filteredList = response.filter((item: any) => item.city === city);
-            if (filteredList.length < 1) {
-                throw new Error("city does not exist");
-            }
-            const data = filteredList[0];
+            const data = await PriceService.getPrice(server, itemName, enchant, city);
+
             const embed = new EmbedBuilder();
             embed.setTitle("Price of " + itemName);
+            embed.setThumbnail(`https://render.albiononline.com/v1/item/${data.item_id}.png`);
             embed.addFields(
                 { name: "Name", value: itemName, inline: true },
                 { name: "City", value: data.city, },
                 { name: "Minimum Sell Price", value: data.sell_price_min.toString(), },
-                { name: "Minimum Sell Price Timestamp", value: data.sell_price_min_date, inline: true},
+                { name: "Minimum Sell Price Timestamp", value: data.sell_price_min_date, inline: true },
                 { name: "Maximum Sell Price", value: data.sell_price_max.toString(), },
-                { name: "Maximum Sell Price Timestamp", value: data.sell_price_max_date, inline: true},
+                { name: "Maximum Sell Price Timestamp", value: data.sell_price_max_date, inline: true },
                 { name: "Minimum Buy Price", value: data.buy_price_min.toString(), },
-                { name: "Minimum Buy Price Timestamp", value: data.buy_price_min_date, inline: true},
+                { name: "Minimum Buy Price Timestamp", value: data.buy_price_min_date, inline: true },
                 { name: "Maximum Buy Price", value: data.buy_price_max.toString(), },
-                { name: "Maximum Buy Price Timestamp", value: data.buy_price_max_date, inline: true},
+                { name: "Maximum Buy Price Timestamp", value: data.buy_price_max_date, inline: true },
             )
 
             await command.editReply({ embeds: [embed], content: `` });
