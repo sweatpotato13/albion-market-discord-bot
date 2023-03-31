@@ -29,7 +29,7 @@ export class Price {
         city: string,
         command: CommandInteraction
     ): Promise<void> {
-        await command.deferReply({ ephemeral: true });
+        await command.deferReply({ ephemeral: false });
         this._price(server, item, city, command);
     }
 

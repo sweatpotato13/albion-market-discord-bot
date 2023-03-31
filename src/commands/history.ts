@@ -17,7 +17,7 @@ export class History {
         city: string,
         command: CommandInteraction
     ): Promise<void> {
-        await command.deferReply({ ephemeral: true });
+        await command.deferReply({ ephemeral: false });
         this._history(server, item, city, command);
     }
 
