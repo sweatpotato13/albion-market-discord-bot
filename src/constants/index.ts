@@ -4,6 +4,10 @@ export const priceCities = [
   "Black Market", "Bridgewatch", "Caerleon", "Fort Sterling", "Lymhurst", "Martlock", "Thetford"
 ];
 
+export const historyCities = [
+  "Black Market", "Bridgewatch", "Bridgewatch Portal", "Caerleon", "Fort Sterling", "Lymhurst", "Lymhurst Portal", "Martlock", "Thetford"
+];
+
 export const itemLists = items.filter((item: any) => item.LocalizedNames).map((item: any) => {
   return {
     name: item.LocalizedNames["KO-KR"],
