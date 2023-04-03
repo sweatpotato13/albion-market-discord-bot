@@ -25,7 +25,7 @@ export class PriceService {
         if (filteredList.length < 1) {
             throw new Error("city does not exist");
         }
-        const data = filteredList[0];
+        const data = filteredList;
         return data;
     }
 

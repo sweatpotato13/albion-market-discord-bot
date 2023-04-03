@@ -1,11 +1,12 @@
-import { ApplicationCommandOptionType, AutocompleteInteraction, CommandInteraction, EmbedBuilder, HexColorString } from "discord.js";
+import { Pagination, PaginationType } from "@discordx/pagination";
+import { ApplicationCommandOptionType, CommandInteraction, EmbedBuilder, HexColorString } from "discord.js";
 import {
     Discord,
     Slash,
     SlashChoice,
     SlashOption,
 } from "discordx";
-import { enchantColorCode, priceCities } from "../constants";
+import { enchantColorCode, itemQuality, priceCities } from "../constants";
 import { PriceService } from "../services";
 
 @Discord()
@@ -42,24 +43,33 @@ export class Price {
     async _price(server: string, itemName: string, enchant: number, city: string, command: CommandInteraction): Promise<any> {
         try {
             const data = await PriceService.getPrice(server, itemName, enchant, city);
-            const embed = new EmbedBuilder();
-            embed.setTitle("Price of " + itemName);
-            embed.setColor(enchantColorCode[enchant] as HexColorString);
-            embed.setThumbnail(`https://render.albiononline.com/v1/item/${data.item_id}.png`);
-            embed.addFields(
-                { name: "Name", value: itemName, inline: true },
-                { name: "City", value: data.city, },
-                { name: "Minimum Sell Price", value: data.sell_price_min.toString(), },
-                { name: "Minimum Sell Price Timestamp", value: data.sell_price_min_date, inline: true },
-                { name: "Maximum Sell Price", value: data.sell_price_max.toString(), },
-                { name: "Maximum Sell Price Timestamp", value: data.sell_price_max_date, inline: true },
-                { name: "Minimum Buy Price", value: data.buy_price_min.toString(), },
-                { name: "Minimum Buy Price Timestamp", value: data.buy_price_min_date, inline: true },
-                { name: "Maximum Buy Price", value: data.buy_price_max.toString(), },
-                { name: "Maximum Buy Price Timestamp", value: data.buy_price_max_date, inline: true },
-            )
 
-            await command.editReply({ embeds: [embed], content: `` });
+            const pages = data.map((elem) => {
+                const embed = new EmbedBuilder()
+                embed.setTitle("Price of " + itemName);
+                embed.setColor(enchantColorCode[enchant] as HexColorString);
+                embed.setThumbnail(`https://render.albiononline.com/v1/item/${elem.item_id}.png`);
+                embed.addFields(
+                    { name: "Name", value: itemName, inline: true },
+                    { name: "City", value: elem.city, },
+                    { name: "Quality", value: itemQuality[elem.quality] },
+                    { name: "Minimum Sell Price", value: elem.sell_price_min.toString(), },
+                    { name: "Minimum Sell Price Timestamp", value: elem.sell_price_min_date, inline: true },
+                    { name: "Maximum Sell Price", value: elem.sell_price_max.toString(), },
+                    { name: "Maximum Sell Price Timestamp", value: elem.sell_price_max_date, inline: true },
+                    { name: "Minimum Buy Price", value: elem.buy_price_min.toString(), },
+                    { name: "Minimum Buy Price Timestamp", value: elem.buy_price_min_date, inline: true },
+                    { name: "Maximum Buy Price", value: elem.buy_price_max.toString(), },
+                    { name: "Maximum Buy Price Timestamp", value: elem.buy_price_max_date, inline: true },
+                )
+
+                return { embeds: [embed] };
+            });
+
+            new Pagination(command, pages, {
+                filter: (interact) => interact.user.id === command.user.id,
+                type: PaginationType.Button,
+            }).send();
         } catch (error: any) {
             console.error(error);
             await command.editReply(`${error.message}`);
