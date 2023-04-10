@@ -1,4 +1,4 @@
-# fly.toml file generated for albion-market-discord-bot on 2023-03-30T16:17:14+09:00
+# fly.toml file generated for albion-market-discord-bot on 2023-04-03T14:46:51+09:00
 
 app = "albion-market-discord-bot"
 kill_signal = "SIGINT"
