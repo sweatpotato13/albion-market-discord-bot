@@ -40,7 +40,7 @@ export class History {
         quality: number,
         command: CommandInteraction
     ): Promise<void> {
-        await command.deferReply({ ephemeral: false });
+        await command.deferReply({ ephemeral: true });
         this._history(server, item, enchant ? enchant : 0, quality ? quality : 1, city, command);
     }
 

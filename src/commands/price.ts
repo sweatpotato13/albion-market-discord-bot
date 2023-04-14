@@ -35,7 +35,7 @@ export class Price {
         enchant: number,
         command: CommandInteraction
     ): Promise<void> {
-        await command.deferReply({ ephemeral: false });
+        await command.deferReply({ ephemeral: true });
 
         this._price(server, item, enchant ? enchant : 0, city, command);
     }

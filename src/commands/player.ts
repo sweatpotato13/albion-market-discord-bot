@@ -22,7 +22,7 @@ export class Player {
         name: string,
         command: CommandInteraction
     ): Promise<void> {
-        await command.deferReply({ ephemeral: false });
+        await command.deferReply({ ephemeral: true });
 
         this._player(server, name, command);
     }
